@@ -1,0 +1,4 @@
+# azure-app-service.yaml
+# This file is just for reference, not needed for deployment
+version: 1.0
+runtime: python|3.12

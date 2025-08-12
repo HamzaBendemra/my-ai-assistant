@@ -30,15 +30,8 @@ COPY . .
 RUN useradd -m -u 1000 streamlit && chown -R streamlit:streamlit /app
 USER streamlit
 
-# Expose Streamlit port
-EXPOSE 8501
+# Azure App Service expects port 8000 by default
+EXPOSE 8000
 
-# Health check
-HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health || exit 1
-
-# Run Streamlit with production settings
-CMD ["streamlit", "run", "app.py", \
-     "--server.port=8501", \
-     "--server.address=0.0.0.0", \
-     "--server.headless=true", \
-     "--browser.gatherUsageStats=false"]
+# Run Streamlit on port 8000
+CMD ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
