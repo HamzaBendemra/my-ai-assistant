@@ -1,23 +1,22 @@
 #!/bin/bash
 
 # Azure App Service startup script for Streamlit
-echo "Starting Streamlit application..."
+echo "Starting Streamlit application on Azure App Service..."
 
-# Set default port if not provided by Azure
+# Azure App Service sets PORT automatically, fallback to 8000
 if [ -z "$PORT" ]; then
     export PORT=8000
 fi
 
-# Install dependencies if requirements.txt exists
-if [ -f "requirements.txt" ]; then
-    echo "Installing Python dependencies..."
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-fi
+echo "Using port: $PORT"
+
+# Verify Python and dependencies
+python --version
+pip list | grep streamlit
 
 # Start Streamlit with Azure-optimized settings
-echo "Starting Streamlit on port $PORT..."
-python -m streamlit run app.py \
+echo "Starting Streamlit server..."
+exec python -m streamlit run app.py \
     --server.port=$PORT \
     --server.address=0.0.0.0 \
     --server.headless=true \

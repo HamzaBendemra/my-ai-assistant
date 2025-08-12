@@ -6,22 +6,23 @@ from dotenv import load_dotenv
 from utils.auth import check_password
 from datetime import datetime
 
-# Load environment variables (for local development)
-load_dotenv()
+# Load environment variables (for local development only)
+if 'WEBSITE_HOSTNAME' not in os.environ:
+    load_dotenv()
 
 # Health check route (for Azure monitoring)
 if len(sys.argv) > 1 and sys.argv[1] == "health":
     try:
         # Basic health check
-        import anthropic
-        import supabase
-        print("OK")
+        import anthropic  # noqa: F401
+        import supabase  # noqa: F401
+        print("OK - All dependencies available")
         sys.exit(0)
     except Exception as e:
         print(f"ERROR: {e}")
         sys.exit(1)
 
-# Azure App Service compatibility
+# Streamlit configuration
 st.set_page_config(
     page_title="Life Assistant",
     page_icon="🏠",
@@ -46,27 +47,29 @@ def main():
     else:
         st.info("🔵 Running locally")
     
-    # Simple welcome message
+    # Navigation info
+    st.info("👈 Use the sidebar to navigate between Dashboard and Chat")
+    
+    # Quick metrics preview
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.metric("Budget", "Loading...", "")
+        if st.button("📊 Go to Dashboard", use_container_width=True):
+            st.switch_page("pages/1_📊_Dashboard.py")
     
     with col2:
-        st.metric("Next Event", "Loading...", "")
+        if st.button("💬 Start Chat", use_container_width=True):
+            st.switch_page("pages/2_💬_Chat.py")
     
     with col3:
-        st.metric("Tasks", "Loading...", "")
+        if st.button("🔄 Refresh", use_container_width=True):
+            st.rerun()
     
     st.divider()
     
-    st.info("👈 Use the sidebar to navigate between Dashboard and Chat")
-    
-    # Quick status
+    # System status
     with st.container():
-        st.subheader("Quick Status")
-        st.write("✅ App is running")
-        st.write("✅ Authentication working")
+        st.subheader("🔧 System Status")
         
         # Check environment variables
         env_vars = [
@@ -85,13 +88,22 @@ def main():
             st.info("Configure these in Azure App Service → Configuration → Application settings")
         else:
             st.success("✅ All environment variables configured")
+        
+        # Quick dependency check
+        try:
+            import anthropic  # noqa: F401
+            import supabase  # noqa: F401
+            st.success("✅ All dependencies loaded successfully")
+        except ImportError as e:
+            st.error(f"❌ Dependency error: {e}")
 
-        # Show deployment info
+        # Show Azure deployment info
         if 'WEBSITE_HOSTNAME' in os.environ:
-            with st.expander("🔍 Deployment Info"):
+            with st.expander("🔍 Azure Deployment Info"):
                 st.write(f"**Site Name:** {os.environ.get('WEBSITE_SITE_NAME', 'Unknown')}")
                 st.write(f"**Resource Group:** {os.environ.get('WEBSITE_RESOURCE_GROUP', 'Unknown')}")
-                st.write(f"**Subscription ID:** {os.environ.get('WEBSITE_OWNER_NAME', 'Unknown')}")
+                st.write(f"**Instance ID:** {os.environ.get('WEBSITE_INSTANCE_ID', 'Unknown')}")
+                st.write(f"**Python Version:** {sys.version}")
 
 if __name__ == "__main__":
     main()
