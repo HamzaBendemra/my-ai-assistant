@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "my-ai-assistant"
+version = "0.1.0"
+description = ""
+authors = ["Hamza B <h.bendemra@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+streamlit = "^1.48.0"
+anthropic = "^0.62.0"
+supabase = "^2.18.0"
+python-dotenv = "^1.1.1"
+google-api-python-client = "^2.178.0"
+google-auth-httplib2 = "^0.2.0"
+google-auth-oauthlib = "^1.2.2"
+requests = "^2.32.4"
+pandas = "^2.3.1"
+plotly = "^6.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
