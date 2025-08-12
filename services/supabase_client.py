@@ -7,8 +7,8 @@ import json
 
 class SupabaseService:
     def __init__(self):
-        url = os.getenv("SUPABASE_URL") or st.secrets.get("SUPABASE_URL")
-        key = os.getenv("SUPABASE_ANON_KEY") or st.secrets.get("SUPABASE_ANON_KEY")
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_ANON_KEY"]
         
         if not url or not key:
             st.error("Supabase credentials not found. Please check your .env file.")

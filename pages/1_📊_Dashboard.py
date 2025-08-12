@@ -19,7 +19,7 @@ if not check_password():
 @st.cache_resource
 def init_services():
     return {
-        "ynab": YNABService(),
+        "ynab": YNABService(default_budget_name=st.secrets["YNAB_DEFAULT_BUDGET_NAME"]),
         "supabase": SupabaseService()
     }
 
@@ -108,6 +108,28 @@ if budget_data:
 else:
     st.info("👉 Add your YNAB access token to see budget data")
 
-# Calendar placeholder
-st.subheader("📅 Today's Schedule")
-st.info("Calendar integration coming next...")
+# Add this to pages/1_📊_Dashboard.py after the metrics section:
+
+# Quick Actions Section
+st.subheader("⚡ Quick Actions")
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    if st.button("💬 Ask about budget", use_container_width=True):
+        st.switch_page("pages/2_💬_Chat.py")
+
+with col2:
+    if st.button("🔄 Refresh Data", use_container_width=True):
+        st.cache_data.clear()
+        st.rerun()
+
+with col3:
+    if st.button("📊 View Full Budget", use_container_width=True):
+        st.info("This will open YNAB web app")
+        st.markdown("[Open YNAB →](https://app.youneedabudget.com)")
+
+with col4:
+    if st.button("📅 Today's Events", use_container_width=True):
+        st.info("Calendar integration coming soon")
+
+st.divider()

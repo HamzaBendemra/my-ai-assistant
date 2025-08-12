@@ -12,7 +12,7 @@ def check_password():
     def password_entered():
         """Check if entered password is correct"""
         entered_password = st.session_state["password"]
-        correct_password = os.getenv("APP_PASSWORD", "changethis")
+        correct_password = st.secrets["APP_PASSWORD"]
 
         if hmac.compare_digest(entered_password, correct_password):
             st.session_state["authenticated"] = True
