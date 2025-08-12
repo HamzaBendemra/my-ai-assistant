@@ -1,5 +1,4 @@
 # services/ynab_service.py
-# Replace the get_current_month_budget method with this corrected version:
 
 import os
 import requests
@@ -8,6 +7,7 @@ from typing import Dict, Optional
 
 class YNABService:
     def __init__(self, default_budget_name: Optional[str] = None):
+        # Azure App Service environment variables
         self.access_token = os.getenv("YNAB_ACCESS_TOKEN")
         self.base_url = "https://api.youneedabudget.com/v1"
         
@@ -18,12 +18,15 @@ class YNABService:
         
         if not self.access_token:
             self.is_connected = False
+            st.warning("YNAB_ACCESS_TOKEN not found in environment variables")
         else:
             self.is_connected = True
             self.headers = {
                 "Authorization": f"Bearer {self.access_token}",
                 "Content-Type": "application/json"
             }
+    
+    # ...rest of existing code...
     
     def list_budget_names(self):
         """Helper method to see all available budget names"""
