@@ -3,12 +3,11 @@ import os
 from datetime import datetime, timedelta
 from supabase import create_client, Client
 import streamlit as st
-import json
 
 class SupabaseService:
     def __init__(self):
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_ANON_KEY"]
+        url = os.getenv("SUPABASE_URL")
+        key = os.getenv("SUPABASE_ANON_KEY")
         
         if not url or not key:
             st.error("Supabase credentials not found. Please check your .env file.")
@@ -55,7 +54,8 @@ class SupabaseService:
             if result.data:
                 return result.data.get("data")
             return None
-        except:
+        except Exception as e:
+            st.error(f"Error fetching cached data: {str(e)}")
             return None
     
     def set_cached_data(self, cache_key: str, data: dict, ttl_minutes: int = 60):

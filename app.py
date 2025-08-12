@@ -1,6 +1,5 @@
 # app.py
 import streamlit as st
-import os
 from dotenv import load_dotenv
 from utils.auth import check_password
 from datetime import datetime

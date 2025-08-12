@@ -4,17 +4,16 @@
 import os
 import requests
 import streamlit as st
-from datetime import datetime
 from typing import Dict, Optional
 
 class YNABService:
     def __init__(self, default_budget_name: Optional[str] = None):
-        self.access_token = st.secrets["YNAB_ACCESS_TOKEN"]
+        self.access_token = os.getenv("YNAB_ACCESS_TOKEN")
         self.base_url = "https://api.youneedabudget.com/v1"
-        # Use provided name, environment variable, or None
+        
         self.default_budget_name = (
             default_budget_name or 
-            st.secrets["YNAB_DEFAULT_BUDGET_NAME"]
+            os.getenv("YNAB_DEFAULT_BUDGET_NAME")
         )
         
         if not self.access_token:
@@ -60,16 +59,25 @@ class YNABService:
             if not budgets:
                 return None
             
-            # Find budget by name if specified, otherwise use first one
+            # Determine which budget to use
             budget_name_to_use = budget_name or self.default_budget_name
+            
             if budget_name_to_use:
+                # Find budget by exact name match
                 budget = next((b for b in budgets if b["name"] == budget_name_to_use), None)
                 if not budget:
-                    st.error(f"Budget '{budget_name_to_use}' not found. Available budgets: {[b['name'] for b in budgets]}")
-                    return None
-                budget_id = budget["id"]
+                    available_names = [b['name'] for b in budgets]
+                    st.error(f"Budget '{budget_name_to_use}' not found. Available budgets: {available_names}")
+                    st.info(f"Using first available budget: '{available_names[0]}' instead.")
+                    budget_id = budgets[0]["id"]
+                else:
+                    budget_id = budget["id"]
+                    st.success(f"✅ Using budget: '{budget_name_to_use}'")
             else:
+                # No specific budget name, use first one
                 budget_id = budgets[0]["id"]
+                st.info(f"Using default budget: '{budgets[0]['name']}'")
+            
             
             # Use 'current' for the current month instead of a specific date
             # This ensures we always get valid data

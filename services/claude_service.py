@@ -6,7 +6,7 @@ from typing import List, Dict, Optional
 
 class ClaudeService:
     def __init__(self):
-        api_key = st.secrets["ANTHROPIC_API_KEY"]
+        api_key = os.getenv("ANTHROPIC_API_KEY")
         
         if not api_key:
             st.error("Claude API key not found. Please check your .env file.")

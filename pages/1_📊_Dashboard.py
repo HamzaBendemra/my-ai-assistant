@@ -1,4 +1,5 @@
 # pages/1_📊_Dashboard.py
+import os
 import streamlit as st
 import plotly.graph_objects as go
 from datetime import datetime
@@ -19,7 +20,7 @@ if not check_password():
 @st.cache_resource
 def init_services():
     return {
-        "ynab": YNABService(default_budget_name=st.secrets["YNAB_DEFAULT_BUDGET_NAME"]),
+        "ynab": YNABService(default_budget_name=os.getenv("YNAB_DEFAULT_BUDGET_NAME")),
         "supabase": SupabaseService()
     }
 

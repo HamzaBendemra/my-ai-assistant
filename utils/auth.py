@@ -1,9 +1,7 @@
 # utils/auth.py
 import streamlit as st
-import hashlib
 import hmac
 import os
-from datetime import datetime
 
 
 def check_password():
@@ -12,7 +10,7 @@ def check_password():
     def password_entered():
         """Check if entered password is correct"""
         entered_password = st.session_state["password"]
-        correct_password = st.secrets["APP_PASSWORD"]
+        correct_password = os.getenv("APP_PASSWORD")
 
         if hmac.compare_digest(entered_password, correct_password):
             st.session_state["authenticated"] = True

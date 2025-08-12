@@ -1,0 +1,19 @@
+# .dockerignore
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+venv
+ENV
+.vscode
+.idea
+.DS_Store
+*.sqlite
+*.db
+.streamlit/secrets.toml
+.env
+.env.local

@@ -1,4 +1,5 @@
 # pages/2_💬_Chat.py
+import os
 import streamlit as st
 from utils.auth import check_password
 from services.claude_service import ClaudeService
@@ -19,7 +20,7 @@ def init_services():
     return {
         "claude": ClaudeService(),
         "supabase": SupabaseService(),
-        "ynab": YNABService(default_budget_name=st.secrets["YNAB_DEFAULT_BUDGET_NAME"])
+        "ynab": YNABService(default_budget_name=os.getenv("YNAB_DEFAULT_BUDGET_NAME"))
     }
 
 services = init_services()
